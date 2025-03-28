@@ -8,6 +8,7 @@ import org.example.exam_paper.Service.StudentScoreService;
 import org.example.exam_paper.Service.StudentService;
 import org.example.exam_paper.Service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,17 +45,18 @@ public class StudentScoreController {
     }
 
     @PostMapping("/add")
-    public Student addStudent(@RequestBody Student student) {
+    public String addStudent(@ModelAttribute Student student) {
         student.setStudentId(studentService.generateStudentId());
-        return studentRespository.save(student);
+        studentRespository.save(student);
+        return "redirect:/v1/students";
     }
+
 
     @PostMapping("/scores/add")
     public String addScore(@ModelAttribute Student_score studentScore,
                            @RequestParam("studentId") String studentId,
                            @RequestParam("subjectId") Long subjectId) {
-        // Lấy Student và Subject từ database
-        Student student = studentService.getStudentById(String.valueOf(studentId));
+        Student student = studentService.getStudentById(studentId);
         Subject subject = subjectService.getSubjectById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
 
