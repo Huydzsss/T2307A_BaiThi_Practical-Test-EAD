@@ -34,4 +34,9 @@ public class Student_score {
         else if (finalScore >= 4.0) return "D";
         else return "F";
     }
+
+
+    public Long getId() {
+        return studentScoreId;
+    }
 }

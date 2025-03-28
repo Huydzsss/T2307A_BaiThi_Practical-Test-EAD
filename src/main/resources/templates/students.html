@@ -51,6 +51,7 @@
             <th>Score 2</th>
             <th>Credit</th>
             <th>Grade</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -70,36 +71,39 @@
                     </span>
                 </span>
             </td>
+            <td>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:attr="data-bs-target='#editScoreModal' + ${score.studentScoreId}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<!-- Modal Add Student -->
-<div class="modal fade" id="addStudentModal" tabindex="-1">
+<!-- Modal Edit Score -->
+<div th:each="score : ${studentScores}" class="modal fade" th:id="'editScoreModal' + ${score.studentScoreId}" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fas fa-user-plus"></i> Add Student</h5>
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Score</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="/v1/students/add" method="post">
+                <form action="/v1/students/scores/update" method="post">
+                    <input type="hidden" name="studentScoreId" th:value="${score.studentScoreId}">
                     <div class="mb-3">
-                        <label class="form-label">Student ID</label>
-                        <input type="text" name="student_id" class="form-control" required>
+                        <label class="form-label">Score 1</label>
+                        <input type="number" name="score1" class="form-control" min="0" max="10" required th:value="${score.score1}">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" name="student_name" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Address</label>
-                        <input type="text" name="address" class="form-control">
+                        <label class="form-label">Score 2</label>
+                        <input type="number" name="score2" class="form-control" min="0" max="10" required th:value="${score.score2}">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Add Student</button>
+                        <button type="submit" class="btn btn-warning">Update Score</button>
                     </div>
                 </form>
             </div>
@@ -107,45 +111,6 @@
     </div>
 </div>
 
-<!-- Modal Add Score -->
-<div class="modal fade" id="addScoreModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="fas fa-book-medical"></i> Add Score</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/v1/students/scores/add" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Student ID</label>
-                        <select name="studentId" class="form-control">
-                            <option th:each="student : ${students}" th:value="${student.studentId}" th:text="${student.student_name}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Subject Name</label>
-                        <select name="subjectId" class="form-control">
-                            <option th:each="subject : ${subjects}" th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Score 1</label>
-                        <input type="number" name="score1" class="form-control" min="0" max="10" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Score 2</label>
-                        <input type="number" name="score2" class="form-control" min="0" max="10" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add Score</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

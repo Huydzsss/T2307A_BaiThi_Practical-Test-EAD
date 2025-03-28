@@ -72,6 +72,40 @@ public class StudentScoreController {
 
         return "redirect:/v1/students";
     }
+    @GetMapping("/edit/{studentId}")
+    public String editStudent(@PathVariable String studentId, Model model) {
+        Student student = studentService.getStudentById(studentId);
+        if (student == null) {
+            throw new IllegalArgumentException("Student not found");
+        }
+        model.addAttribute("student", student);
+        return "edit_student";
+    }
+
+    @PostMapping("/update")
+    public String updateStudent(@ModelAttribute Student student) {
+        studentService.updateStudent(student);
+        return "redirect:/v1/students";
+    }
+
+    @GetMapping("/scores/edit/{id}")
+    public String editScore(@PathVariable Long id, Model model) {
+        Student_score studentScore = studentScoreService.getScoreById(id);
+        if (studentScore == null) {
+            throw new IllegalArgumentException("Score not found");
+        }
+        model.addAttribute("studentScore", studentScore);
+        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("subjects", subjectService.getAllSubjects());
+        return "edit_score";
+    }
+
+    @PostMapping("/scores/update")
+    public String updateScore(@ModelAttribute Student_score studentScore) {
+        studentScoreService.updateScore(studentScore);
+        return "redirect:/v1/students";
+    }
+
 
 
 }
